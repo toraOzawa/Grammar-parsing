@@ -7,9 +7,10 @@
 char *string;
 int i;
 int length;
+TREE root;
 
 // <expression> -> <atomic> <expression tail>
-bool expression() {
+Tree expression() {
     if (!atomic()) return 0;
     if (!expr_tail()) return 0;
 
@@ -19,14 +20,16 @@ bool expression() {
 }
 
 // <expression tail> -> U <expression> | ^ <expression> | ϵ
-bool expr_tail() { // could cause problems
+Tree expr_tail() { // could cause problems
     if (lookahead('U')) {
         match('U');
-        if (!expression()) return 0;
+        TREE exp = expression();
+        if (exp == NULL) return 0;
         return 1;
     } else if (lookahead('^')) {
         match('^');
-        if (!expression()) return 0;
+        TREE exp = expression();
+        if (exp == NULL) return 0;
         return 1;   
     } else {
         return 1; 
@@ -34,7 +37,7 @@ bool expr_tail() { // could cause problems
 }
 
 // <atomic> -> (<expression>) | <set>
-bool atomic() {
+Tree atomic() {
     if (lookahead('(')) {
         if (!match('(')) return 0;
         if (!expression()) return 0;
@@ -47,7 +50,7 @@ bool atomic() {
 }
 
 // <set> -> { <set tail>
-bool set() {
+Tree set() {
     if (!match('{')) return 0;
     if (!set_tail()) return 0;
 
@@ -55,7 +58,7 @@ bool set() {
 }
 
 // <set> -> { <set tail>
-bool set_tail() {
+Tree set_tail() {
     if (lookahead('}')) {
         return match('}');
     } else {
@@ -66,51 +69,78 @@ bool set_tail() {
 }
 
 // <elements> -> <element> <elements tail>
-bool elements() {
-   if (!element()) return 0;
-   if (!elements_tail()) return 0;
-   return 1;
+Tree elements() {
+   TREE elem = element();
+   if (elem == NULL) return NULL;
+   TREE tail = elements_tail();
+   if (tail == NULL) return NULL;
+
+    if (tail->label == 'ϵ') { 
+        // free tail   
+        return makeNode1('E', elem); 
+    
+    }
+
+    TREE rightMost = tail->leftmostChild;
+    TREE middle = makeNode0(',');
+    TREE leftMost = makeNode1('E', elem);
+    tail->leftmostChild = leftMost;
+    leftMost->rightSibling = middle;
+    middle->rightSibling = rightMost;
+   return tail->;
 }
 
 // <elements tail> -> , <elements> | ϵ
-bool elements_tail() { // causing problems?
+Tree elements_tail() { // causing problems?
     if (lookahead(',')) {
         match(','); // could be formalized like the other if statements
-        if (!elements()) return 0; // could be condensed 
-        return 1;
+        TREE elems = elements();
+        if (elems == NULL) return NULL; // could be condensed 
+
+        return elems;
 
     } else {
-        return 1;
+        return makeNode0('ϵ');
     }
 }
 
 // <element> -> <number>
-bool element() {
-    return number();
+Tree element() {
+    TREE num = number();
+    if (num == NULL) return NULL;
+    return makeNode1('e', num);
 }
 
-// <Number> -> <digit> <number tail>
-bool number() {
-    if (!digit()) return 0;
-    if (!number_tail()) return 0;
-    return 1;
+// <number> -> <digit> <number tail>
+Tree number() {
+    TREE dig = digit();
+    if (dig == NULL) return NULL;
+    TREE tail = number_tail();
+    if (tail == NULL) return NULL;
+
+
+    if (tail->label == 'ϵ') return makeNode4('N', dig, NULL, NULL, NULL);
+    return makeNode4('N', tail, dig, NULL, NULL);
 }
 
 // <number tail> -> <number> | ϵ
-bool number_tail() { // might cause problems
+TREE number_tail() { // might cause problems
     if (is_digit()) { // lookahead in this scenario
-        number();
-        return 1;
+        return number();
     } else {
-        return 1;
+        return makeNode0('ϵ');
     }
 }
 
 // <digit> -> 0 | 1 | · · · | 9
-bool digit() {
+Tree digit() {
     bool isDigit = is_digit();
-    if (isDigit) return match(string[i]);
-    return 0;
+    if (isDigit) { 
+        match(string[i])
+        return makeNode1( 'd', makeNode0(string[i]));
+    } else {
+        return NULL;
+    }
 }
 
 bool is_digit() {
@@ -126,7 +156,7 @@ bool parse_set_alg(char *input) {
     // while(i < length) {
     //     result = expression 
     // }
-    return expression() && length == i; // may cause problems
+    return expression() != null && length == i; // may cause problems
 }
 
 bool lookahead(char c) {

@@ -30,19 +30,19 @@
 // ⟨NumberTail⟩ → ⟨Number ⟩ | ϵ
 // ⟨Digit⟩ → 0 | 1 | · · · | 9                 (add to tree)
 
-extern bool expression();
+extern TREE expression();
 
-extern bool expr_tail();
+extern TREE expr_tail();
 
-extern bool atomic();
+extern TREE atomic();
 
-extern bool set();
+extern TREE set();
 
-extern bool set_tail();
+extern TREE set_tail();
 
-extern bool elements();
+extern TREE elements();
 
-extern bool element();
+extern TREE element();
 
 extern bool elements_tail();
 

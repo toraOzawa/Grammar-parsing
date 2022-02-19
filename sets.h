@@ -1,6 +1,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include "tree.h"
 
 
 // ⟨Expression⟩ → ⟨Expression⟩ U ⟨Expression⟩
@@ -24,12 +25,12 @@
 // ⟨SetTail⟩ → } | ⟨Elements⟩ }
 // ⟨Elements⟩ → ⟨Element⟩ ⟨ElementsTail⟩      (add to tree)
 // ⟨ElementsTail⟩ → , ⟨Elements⟩ | ϵ
-// ⟨Element⟩ → ⟨Number ⟩                      (add to tree)
+// ⟨Element⟩ → ⟨Number⟩                      (add to tree)
 // ⟨Number ⟩ → ⟨Digit⟩ ⟨NumberTail⟩           (add to tree)
 // ⟨NumberTail⟩ → ⟨Number ⟩ | ϵ
 // ⟨Digit⟩ → 0 | 1 | · · · | 9                 (add to tree)
 
-extern bool expression();
+extern Tree expression();
 
 extern bool expr_tail();
 
