@@ -3,11 +3,20 @@
 #include <string.h>
 #include <stdbool.h>
 #include "sets2.h"
+#include "Stack.h"
 
 char *string;
 int i;
 int length;
 TREE root;
+
+typedef struct ParseTable* ParseTable;
+
+ParseTable {
+    int** table; // "transition table"
+    int** dictionary; // i = syntactic category label; dictionary[i][j] = jth terminal/category to push on stack for ith category
+    int* row_lengths; // keeps track of row lengths of dictionary
+};
 
 // <expression> -> <atomic> <expression tail>
 Tree expression() {
@@ -171,12 +180,111 @@ bool lookahead(char c) {
 }
 
 bool match(char c) {
+    if (c == '*') return true; // special case used in table driven parser
     i++;
     return string[i - 1] == c && (i - 1) < length;
 }
+
+
+
+TREE table_parse_set_alg(ParseTable tb, char *input) {
+    string = input;
+    i = 0;
+    length = strlen(string);
+    Stack stack = new_Stack();
+
+    root = makeNode0('E');
+    Stack_push(root);
+    TREE cur_root = root;
+
+    while (!Stack_isEmpty(stack)) {
+        TREE cur = Stack_pop(stack);
+        if (isTerminal(cur->label)) {
+            bool result = match(cur->label);
+            if (!result) return NULL;
+        } else {
+            cur_root = cur;
+            int category = tb->table[cur->label][(int)string[i]];
+            if (category == -1) return NULL;
+
+            int children_num = tb->row_lengths[category];
+            for (int j = 0; j < children_num; j++) {
+                char cur_char = (char) tb->dictionary[category][j];
+                Stack_push(makeNode0(cur_char));
+            }
+
+            // create sub tree with cur_root as root
+            TREE prev_child;
+            for (int i = 0; i < children_num; i++) {
+                TREE child = Stack_peek(stack, i);
+                if (cur_root->leftmostChild == NULL) {
+                    cur_root->leftmostChild = child;
+                    prev_child = child;
+                    continue;
+                }
+                prev_child->rightSibling = child;
+                prev_child = child;
+
+            }
+
+        }
+    }
+
+    // free stack
+
+    if (length != i) return NULL;
+    return root;
+
+}
+
+bool isTerminal(char c) {
+    return c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9' || c == '^' || c == '{' || c == '}' || c == 'U' || c == ',' || c == '*';
+}
+
+
 
 int main() {
     if (parse_set_alg("{46,789876,2}")) {
         printf("Success case reached. Were we supposed to?");
     }
+
+    // creating explicit parse table
+    ParseTable set_alg = (ParseTable)malloc(sizeof(struct ParseTable));
+    set_alg->table = (int**)malloc(128 * sizeof(*int));
+
+
+    // setting parsing table
+    for (int i = 0; i < 128; i++) {
+        set_alg->table[i] = (int*)malloc(128 * sizeof(int));
+        for (int j = 0; j < 128; j++) {
+            set_alg->table[i][j] = -1;
+        }
+    }
+    
+    // 0: ⟨Expr⟩ → ⟨Atomic⟩ ⟨ExprTail⟩
+    int E = (int)'E';         
+    // for (int i = 0; i < 128; i++) {
+    //     set_alg->table[E][i] = 0;
+    // }     
+    set_alg->table[E][(int)'('] = 1;
+
+    // 1: ⟨ExprTail⟩ → U ⟨Expr ⟩ | ^ ⟨Expr ⟩ | ϵ
+    // 2: ⟨ExprTail⟩ → ^ ⟨Expr ⟩ | ϵ
+    // -2: ⟨ExprTail⟩ → ϵ
+    int e = (int)'e';
+    for (int i = 0; i < 128; i++) {
+        set_alg->table[E][i] = -2; // special value where nothing is pushed to stack
+    }
+
+    // 2: ⟨Atomic⟩ → ( ⟨Expr ⟩ ) | ⟨Set⟩
+    // 3: ⟨Set⟩ → { ⟨SetTail⟩                        
+    // 4: ⟨SetTail⟩ → } | ⟨Elements⟩ }
+    // 5: ⟨Elements⟩ → ⟨Element⟩ ⟨ElementsTail⟩      
+    // 6: ⟨ElementsTail⟩ → , ⟨Elements⟩ | ϵ
+    // 7: ⟨Element⟩ → ⟨Number⟩                      
+    // 8: ⟨Number⟩ → ⟨Digit⟩ ⟨NumberTail⟩           
+    // 9: ⟨NumberTail⟩ → ⟨Number ⟩ | ϵ
+    // 10: ⟨Digit⟩ → 0 | 1 | · · · | 9  
+
+
 }

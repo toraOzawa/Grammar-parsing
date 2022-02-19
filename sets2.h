@@ -18,17 +18,17 @@
 // ⟨Digit⟩ → 0 | 1 | · · · | 9
 
 
-// 1: ⟨Expr ⟩ → ⟨Atomic⟩ ⟨ExprTail⟩              (add to tree)
-// 2: ⟨ExprTail⟩ → U ⟨Expr ⟩ | ^ ⟨Expr ⟩ | ϵ
-// 3: ⟨Atomic⟩ → ( ⟨Expr ⟩ ) | ⟨Set⟩
-// 4: ⟨Set⟩ → { ⟨SetTail⟩                        (add to tree)
-// 5: ⟨SetTail⟩ → } | ⟨Elements⟩ }
-// 1: ⟨Elements⟩ → ⟨Element⟩ ⟨ElementsTail⟩      (add to tree)
-// 1: ⟨ElementsTail⟩ → , ⟨Elements⟩ | ϵ
-// 1: ⟨Element⟩ → ⟨Number⟩                      (add to tree)
-// 1: ⟨Number ⟩ → ⟨Digit⟩ ⟨NumberTail⟩           (add to tree)
-// 1: ⟨NumberTail⟩ → ⟨Number ⟩ | ϵ
-// 1: ⟨Digit⟩ → 0 | 1 | · · · | 9                 (add to tree)
+// 0: ⟨Expr ⟩ → ⟨Atomic⟩ ⟨ExprTail⟩              (add to tree)
+// 1: ⟨ExprTail⟩ → U ⟨Expr ⟩ | ^ ⟨Expr ⟩ | ϵ
+// 2: ⟨Atomic⟩ → ( ⟨Expr ⟩ ) | ⟨Set⟩
+// 3: ⟨Set⟩ → { ⟨SetTail⟩                        (add to tree)
+// 4: ⟨SetTail⟩ → } | ⟨Elements⟩ }
+// 5: ⟨Elements⟩ → ⟨Element⟩ ⟨ElementsTail⟩      (add to tree)
+// 6: ⟨ElementsTail⟩ → , ⟨Elements⟩ | ϵ
+// 7: ⟨Element⟩ → ⟨Number⟩                      (add to tree)
+// 8: ⟨Number ⟩ → ⟨Digit⟩ ⟨NumberTail⟩           (add to tree)
+// 9: ⟨NumberTail⟩ → ⟨Number ⟩ | ϵ
+// 10: ⟨Digit⟩ → 0 | 1 | · · · | 9                 (add to tree)
 
 extern TREE expression();
 
