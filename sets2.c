@@ -87,7 +87,7 @@ Tree elements() {
     tail->leftmostChild = leftMost;
     leftMost->rightSibling = middle;
     middle->rightSibling = rightMost;
-   return tail->;
+   return tail->leftmostChild;
 }
 
 // <elements tail> -> , <elements> | ϵ
@@ -120,7 +120,14 @@ Tree number() {
 
 
     if (tail->label == 'ϵ') return makeNode4('N', dig, NULL, NULL, NULL);
-    return makeNode4('N', tail, dig, NULL, NULL);
+
+    TREE leftMost = makeNode1('N', dig);
+    TREE rightMost = tail->leftmostChild;
+
+    tail -> leftmostChild = leftMost;
+    leftMost->rightSibling = rightMost;
+    
+    return tail;
 }
 
 // <number tail> -> <number> | ϵ
