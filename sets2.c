@@ -309,7 +309,7 @@ int main() {
     set_alg->dictionary[3][0] = epsilon;
 
     for (int i = 0; i < 128; i++) {
-        set_alg->table[E][i] = 3; 
+        set_alg->table[e][i] = 3; 
     }
     set_alg->table[e][(int)'U'] = 1;
     set_alg->table[e][(int)'^'] = 2;
