@@ -10,13 +10,13 @@ int i;
 int length;
 TREE root;
 
-// typedef struct ParseTable* ParseTable;
+typedef struct ParseTable* ParseTable;
 
-// struct ParseTable {
-//     int** table; // "transition table"
-//     int** dictionary; // i = syntactic category label; dictionary[i][j] = jth terminal/category to push on stack for ith category
-//     int* row_lengths; // keeps track of row lengths of dictionary
-// };
+struct ParseTable {
+    int** table; // "transition table"
+    int** dictionary; // i = syntactic category label; dictionary[i][j] = jth terminal/category to push on stack for ith category
+    int* row_lengths; // keeps track of row lengths of dictionary
+};
 
 // // <expression> -> <atomic> <expression tail>
 // TREE expression() {
