@@ -512,9 +512,9 @@ int main() {
     set_alg->dictionary[24] = (int*)malloc(1 * sizeof(int));
     set_alg->dictionary[24][0] = (int)'8';
 
-    set_alg->row_lengths[24] = 1;
-    set_alg->dictionary[24] = (int*)malloc(1 * sizeof(int));
-    set_alg->dictionary[24][0] = (int)'9';
+    set_alg->row_lengths[25] = 1;
+    set_alg->dictionary[25] = (int*)malloc(1 * sizeof(int));
+    set_alg->dictionary[25][0] = (int)'9';
 
 
     set_alg->table[D][(int)'0'] = 16; 
