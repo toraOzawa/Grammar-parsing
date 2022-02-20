@@ -20,12 +20,12 @@ struct ParseTable {
 
 // <expression> -> <atomic> <expression tail>
 TREE expression() {
-    TREE atomic = atomic();
-    if (atomic == NULL) return NULL;
+    TREE atom = atomic();
+    if (atom == NULL) return NULL;
     TREE tail  = expr_tail();
     if (tail == NULL) return NULL;
 
-    return makeNode4('E', atomic, tail, NULL, NULL);
+    return makeNode4('E', atom, tail, NULL, NULL);
 
 }
 
@@ -55,9 +55,9 @@ TREE atomic() {
         if (!match(')')) return NULL;
         return makeNode4('a', makeNode0('('), exp, makeNode0(')'), NULL);
     } else {
-        TREE set = set();
-        if (set == NULL) return NULL; 
-        return makeNode1('a', set); 
+        TREE s = set();
+        if (s == NULL) return NULL; 
+        return makeNode1('a', s); 
     }
 }
 
