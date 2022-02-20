@@ -529,7 +529,7 @@ int main() {
     set_alg->table[D][(int)'9'] = 25; 
    
 
-    if (table_parse_set_alg(set_alg, "{46,789876,2}") != NULL) {
+    if (table_parse_set_alg(set_alg, "{4,7,2}") != NULL) {
         printf("Success case reached. Were we supposed to?");
     }
 }
