@@ -205,6 +205,7 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
         } else {
             cur_root = cur;
             int category = tb->table[(int)cur->label][(int)string[i]];
+            printf("Category number: %d, Label: %c, input char: %c\n", category, cur->label, string[i])
             if (category == -1) return NULL;
 
             int children_num = tb->row_lengths[category];
