@@ -529,7 +529,7 @@ int main() {
     set_alg->table[D][(int)'9'] = 25; 
    
 
-    if (table_parse_set_alg(set_alg, "({123456789,457293959})^{3839}U{3,6,9,10}") != NULL) {
+    if (table_parse_set_alg(set_alg, "(({123456789,457293959})^{3839})U{3,6,9,10}") != NULL) {
         printf("Success case reached. Were we supposed to?\n");
     }
 }
