@@ -66,6 +66,18 @@ void free_Root() {
 
 }
 
+void TREE_pretty_print(TREE t, int spaces) {
+    printf("call start");
+    for (int i = 0; i < spaces; i++) {
+        printf(" ");
+    }
+    printf("%c", t->label);
+
+    if (t->leftmostChild != NULL) TREE_pretty_print(t->leftmostChild, spaces + 1);
+    if (t->leftmostChild != NULL) TREE_pretty_print(t->rightSibling, spaces);
+
+}
+
 // int main() {
 
 // }
