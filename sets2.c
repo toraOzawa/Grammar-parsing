@@ -231,7 +231,7 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
     }
 
     // free stack
-
+    printf("%d", i);
     if (length != i) return NULL;
     return root;
 
