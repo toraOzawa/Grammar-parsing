@@ -152,7 +152,7 @@ TREE number_tail() { // might cause problems
 Tree digit() {
     bool isDigit = is_digit();
     if (isDigit) { 
-        match(string[i])
+        match(string[i]);
         return makeNode1( 'd', makeNode0(string[i]));
     } else {
         return NULL;
