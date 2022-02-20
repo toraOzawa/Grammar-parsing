@@ -10,6 +10,8 @@ int i;
 int length;
 TREE root;
 
+char input[60];
+
 typedef struct ParseTable* ParseTable;
 
 struct ParseTable {
@@ -234,11 +236,6 @@ bool isTerminal(char c) {
 
 
 int main() {
-    // if (parse_set_alg("{46,789876,2}")) {
-    //     printf("Success case reached. Were we supposed to?");
-    // }
-
-    // creating and allocating explicit parse table and dictionary
     ParseTable set_alg = (ParseTable)malloc(sizeof(struct ParseTable));
     set_alg->table = (int**)malloc(128 * sizeof(int*));
     set_alg->dictionary = (int**)malloc(128 * sizeof(int*));
@@ -252,6 +249,21 @@ int main() {
             set_alg->table[i][j] = -1;
         }
     }
+
+    // Printing key for parse tree
+    printf("Key for parse tree:\n");
+    printf("E = Expression,\n");
+    printf("e = ExprTail,\n");
+    printf("a = atomic,\n");
+    printf("S = Set,\n");
+    printf("s = SetTail,\n");
+    printf("L = Elements,\n");
+    printf("t = ElementsTail,\n");
+    printf("l = element,\n");
+    printf("N = Number,\n");
+    printf("n = NumberTail,\n");
+    printf("D = Digit,\n");
+    printf(": = epsilon (using \":\" to test for failures may cause undefined behavior)\n\n");
 
 
     // manually setting parsing table and dictionary for set of alegbra expressions
@@ -517,23 +529,66 @@ int main() {
     set_alg->table[D][(int)'8'] = 24; 
     set_alg->table[D][(int)'9'] = 25; 
    
-    TREE result = table_parse_set_alg(set_alg, "{1,2,3,4,5,6,7,8,9}");
-    if (result != NULL) {
-        printf("Table success case reached. Were we supposed to?\n");
-        printf("Before\n");
-        printf("After\n");
-        TREE_pretty_print(result, 0);
-        printf("\n");
+   // repl
+    printf("Recursive descent parser: \n");
+    printf("Enter an expression to parse (\"next\" to move on): ");
+    scanf("%59s", input);
+    printf("\n");
+    while (strcmp(input,"next") != 0) {
+        TREE result = parse_set_alg(input);
+        if (result == NULL) {
+            printf("Parse failed...\n");
+        } else {
+            printf("Parse successful!\n");
+            printf("Parse Tree:\n");
+            TREE_pretty_print(result, 0);
+            printf("\n");
+            TREE_free(result);
+        }
+        printf("Enter next expression (\"next\" to move on):");
+        scanf("%59s", input);
     }
-    TREE_free(result);
-    TREE recur = parse_set_alg("{1,2,3,4,5,6,7,8,9}");
-    if (recur != NULL) {
-        printf("Recursion success case reached. Were we supposed to?\n");
-        printf("Before\n");
-        printf("After\n");
-        TREE_pretty_print(recur, 0);
+    printf("\n\n");
+
+    printf("Table driven parser: \n");
+    printf("Enter an expression to parse (\"done\" to move on): ");
+    scanf("%59s", input);
+    printf("\n");
+    while (strcmp(input,"done") != 0) {
+        TREE result = table_parse_set_alg(set_alg, input);
+        if (result == NULL) {
+            printf("Parse failed...\n");
+        } else {
+            printf("Parse successful!\n");
+            printf("Parse Tree:\n");
+            TREE_pretty_print(result, 0);
+            printf("\n");
+            TREE_free(result);
+        }
+        printf("Enter next expression (\"next\" to move on):");
+        scanf("%59s", input);
     }
-    TREE_free(recur);
+
+
+
+    // TREE result = table_parse_set_alg(set_alg, "{1,2,3,4,5,6,7,8,9}");
+    // if (result != NULL) {
+    //     printf("Table success case reached. Were we supposed to?\n");
+    //     printf("Before\n");
+    //     printf("After\n");
+    //     TREE_pretty_print(result, 0);
+    //     printf("\n");
+    // }
+    // TREE_free(result);
+
+    // TREE recur = parse_set_alg("{1,2,3,4,5,6,7,8,9}");
+    // if (recur != NULL) {
+    //     printf("Recursion success case reached. Were we supposed to?\n");
+    //     printf("Before\n");
+    //     printf("After\n");
+    //     TREE_pretty_print(recur, 0);
+    // }
+    // TREE_free(recur);
 
 
 
