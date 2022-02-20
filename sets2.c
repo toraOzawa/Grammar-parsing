@@ -250,9 +250,9 @@ int main() {
 
     // creating and allocating explicit parse table and dictionary
     ParseTable set_alg = (ParseTable)malloc(sizeof(struct ParseTable));
-    set_alg->table = (int**)malloc(128 * sizeof(*int));
-    set_alg->dictionary = (int**)malloc(128 * sizeof(*int));
-    set_alg->row_lengths = (int*)malloc(25 * sizeof(*int));
+    set_alg->table = (int**)malloc(128 * sizeof(int*));
+    set_alg->dictionary = (int**)malloc(128 * sizeof(int*));
+    set_alg->row_lengths = (int*)malloc(25 * sizeof(int*));
 
 
     // allocating and setting parsing table defaults
