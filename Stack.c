@@ -29,3 +29,7 @@ void *Stack_pop(Stack this) {
 void *Stack_peek(Stack this, int i) {
     return LinkedList_elementAt(this->stack, i);
 }
+
+int main() {
+    
+}
