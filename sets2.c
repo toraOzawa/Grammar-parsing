@@ -288,6 +288,7 @@ int main() {
 
 
     set_alg->table[E][(int)'('] = 0;
+    set_alg->table[a][(int)'{'] = 0;
 
 
     // 1: ⟨ExprTail⟩ → U ⟨Expr⟩ 
