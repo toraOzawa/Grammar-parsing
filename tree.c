@@ -61,18 +61,16 @@ TREE makeNode4(char x, TREE t1, TREE t2, TREE t3, TREE t4) {
     return root;
 }
 
-void free_Tree() {
-
-}
-
-void free_Root() {
-
+void TREE_free(TREE root) {
+    if (root->leftmostChild != NULL) TREE_free(root->leftmostChild);
+    if (root->rightSibling!= NULL) TREE_free(root->rightSibling);
+    free(root);
 }
 
 void TREE_pretty_print(TREE t, int spaces) {
     // printf("call start\n");
     for (int i = 0; i < spaces; i++) {
-        printf(" ");
+        printf("  ");
     }
     // printf("spaces inserted\n");
     printf("%c\n", t->label);

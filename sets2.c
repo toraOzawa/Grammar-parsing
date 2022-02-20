@@ -139,7 +139,7 @@ TREE digit() {
     bool isDigit = is_digit();
     if (isDigit) { 
         match(string[i]);
-        return makeNode1('D', makeNode0(string[i]));
+        return makeNode1('D', makeNode0(string[i-1]));
     } else {
         return NULL;
     }
@@ -149,7 +149,7 @@ bool is_digit() {
     return string[i] == '0' || string[i] == '1' || string[i] == '2' || string[i] == '3' || string[i] == '4' || string[i] == '5' || string[i] == '6' || string[i] == '7' || string[i] == '8' || string[i] == '9';
 }
 
-bool parse_set_alg(char *input) {
+TREE parse_set_alg(char *input) {
     string = input;
     i = 0;
     length = strlen(string);
@@ -158,7 +158,9 @@ bool parse_set_alg(char *input) {
     // while(i < length) {
     //     result = expression 
     // }
-    return expression() != NULL && length == i; // may cause problems
+    root = expression();
+    if (length != i) return NULL;
+    return root; // may cause problems
 }
 
 bool lookahead(char c) {
@@ -218,6 +220,7 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
     }
 
     // free stack
+    Stack_free(stack, true);
     printf("%d\n", i);
     if (length != i) return NULL;
     return root;
@@ -514,11 +517,36 @@ int main() {
     set_alg->table[D][(int)'8'] = 24; 
     set_alg->table[D][(int)'9'] = 25; 
    
-    TREE result = table_parse_set_alg(set_alg, "{4567}");
+    TREE result = table_parse_set_alg(set_alg, "{1,2,3,4,5,6,7,8,9}");
     if (result != NULL) {
-        printf("Success case reached. Were we supposed to?\n");
+        printf("Table success case reached. Were we supposed to?\n");
         printf("Before\n");
         printf("After\n");
-        TREE_pretty_print(root, 0);
+        TREE_pretty_print(result, 0);
+        printf("\n");
     }
+    TREE_free(result);
+    TREE recur = parse_set_alg("{1,2,3,4,5,6,7,8,9}");
+    if (recur != NULL) {
+        printf("Recursion success case reached. Were we supposed to?\n");
+        printf("Before\n");
+        printf("After\n");
+        TREE_pretty_print(recur, 0);
+    }
+    TREE_free(recur);
+
+
+
+    free(set_alg->row_lengths);
+    for (int i = 0; i < 128; i++) {
+        free(set_alg->table[i]);
+    }
+    free(set_alg->table);
+
+    for (int i = 0; i < 26; i++) {
+        free(set_alg->dictionary[i]);
+    }
+    free(set_alg->dictionary);
+    free(set_alg);
+
 }
