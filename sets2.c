@@ -19,7 +19,7 @@ struct ParseTable {
 };
 
 // <expression> -> <atomic> <expression tail>
-Tree expression() {
+TREE expression() {
     if (!atomic()) return 0;
     if (!expr_tail()) return 0;
 
@@ -29,7 +29,7 @@ Tree expression() {
 }
 
 // <expression tail> -> U <expression> | ^ <expression> | ϵ
-Tree expr_tail() { // could cause problems
+TREE expr_tail() { // could cause problems
     if (lookahead('U')) {
         match('U');
         TREE exp = expression();
@@ -46,7 +46,7 @@ Tree expr_tail() { // could cause problems
 }
 
 // <atomic> -> (<expression>) | <set>
-Tree atomic() {
+TREE atomic() {
     if (lookahead('(')) {
         if (!match('(')) return 0;
         if (!expression()) return 0;
@@ -59,7 +59,7 @@ Tree atomic() {
 }
 
 // <set> -> { <set tail>
-Tree set() {
+TREE set() {
     if (!match('{')) return 0;
     if (!set_tail()) return 0;
 
@@ -67,7 +67,7 @@ Tree set() {
 }
 
 // <set> -> { <set tail>
-Tree set_tail() {
+TREE set_tail() {
     if (lookahead('}')) {
         return match('}');
     } else {
@@ -78,7 +78,7 @@ Tree set_tail() {
 }
 
 // <elements> -> <element> <elements tail>
-Tree elements() {
+TREE elements() {
    TREE elem = element();
    if (elem == NULL) return NULL;
    TREE tail = elements_tail();
@@ -100,7 +100,7 @@ Tree elements() {
 }
 
 // <elements tail> -> , <elements> | ϵ
-Tree elements_tail() { // causing problems?
+TREE elements_tail() { // causing problems?
     if (lookahead(',')) {
         match(','); // could be formalized like the other if statements
         TREE elems = elements();
@@ -114,14 +114,14 @@ Tree elements_tail() { // causing problems?
 }
 
 // <element> -> <number>
-Tree element() {
+TREE element() {
     TREE num = number();
     if (num == NULL) return NULL;
     return makeNode1('e', num);
 }
 
 // <number> -> <digit> <number tail>
-Tree number() {
+TREE number() {
     TREE dig = digit();
     if (dig == NULL) return NULL;
     TREE tail = number_tail();
