@@ -1,10 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "LinkedList.h"
 
-typedef struct Stack* Stack;
-
-Stack {
+struct Stack {
     LinkedList stack;
 };
+
+typedef struct Stack *Stack;
 
 /**
  * Allocate, initialize and return a new (empty) Stack.

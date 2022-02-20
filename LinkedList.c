@@ -239,55 +239,55 @@ void LinkedList_print_string_list(LinkedList this) {
 	printf("]\n");
 }
 
-#ifdef MAIN
+// #ifdef MAIN
 
-// int main(int argc, char **argv) {
-// 	LinkedList list = new_LinkedList();
-// 	printf("new list =");
-// 	LinkedList_print_string_list(list);
+// // int main(int argc, char **argv) {
+// // 	LinkedList list = new_LinkedList();
+// // 	printf("new list =");
+// // 	LinkedList_print_string_list(list);
 
-// 	printf("adding three elements: ");
-// 	LinkedList_add_at_end(list, "foo");
-// 	LinkedList_add_at_end(list, "bar");
-// 	LinkedList_add_at_end(list, "baz");
-// 	LinkedList_print_string_list(list);
-// 	printf("adding Ted at front: ");
-// 	LinkedList_add_at_front(list, "Ted");
-// 	LinkedList_print_string_list(list);
+// // 	printf("adding three elements: ");
+// // 	LinkedList_add_at_end(list, "foo");
+// // 	LinkedList_add_at_end(list, "bar");
+// // 	LinkedList_add_at_end(list, "baz");
+// // 	LinkedList_print_string_list(list);
+// // 	printf("adding Ted at front: ");
+// // 	LinkedList_add_at_front(list, "Ted");
+// // 	LinkedList_print_string_list(list);
 
-// 	printf("iterating over list:\n");
-// 	LinkedListIterator iterator = LinkedList_iterator(list);
-// 	while (LinkedListIterator_hasNext(iterator)) {
-// 		void *data = LinkedListIterator_next(iterator);
-// 		char *str = (char*)data;
-// 		printf("%s\n", str);
-// 	}
-// 	free(iterator);
+// // 	printf("iterating over list:\n");
+// // 	LinkedListIterator iterator = LinkedList_iterator(list);
+// // 	while (LinkedListIterator_hasNext(iterator)) {
+// // 		void *data = LinkedListIterator_next(iterator);
+// // 		char *str = (char*)data;
+// // 		printf("%s\n", str);
+// // 	}
+// // 	free(iterator);
 
-// 	// Test remove in middle
-// 	printf("removing bar from middle: ");
-// 	LinkedList_remove(list, "bar");
-// 	LinkedList_print_string_list(list);
-// 	// Test remove at head
-// 	printf("removing Ted from start: ");
-// 	LinkedList_remove(list, "Ted");
-// 	LinkedList_print_string_list(list);
-// 	// Test remove in end
-// 	printf("removing baz from end: ");
-// 	LinkedList_remove(list, "baz");
-// 	LinkedList_print_string_list(list);
+// // 	// Test remove in middle
+// // 	printf("removing bar from middle: ");
+// // 	LinkedList_remove(list, "bar");
+// // 	LinkedList_print_string_list(list);
+// // 	// Test remove at head
+// // 	printf("removing Ted from start: ");
+// // 	LinkedList_remove(list, "Ted");
+// // 	LinkedList_print_string_list(list);
+// // 	// Test remove in end
+// // 	printf("removing baz from end: ");
+// // 	LinkedList_remove(list, "baz");
+// // 	LinkedList_print_string_list(list);
 
-// 	// Test remove only element
-// 	void *elt = LinkedList_elementAt(list, 0);
-// 	printf("element 0 is \"%s\"\n", (char*)elt);
-// 	printf("removing only remaining element: ");
-// 	LinkedList_remove(list, elt);
-// 	LinkedList_print_string_list(list);
+// // 	// Test remove only element
+// // 	void *elt = LinkedList_elementAt(list, 0);
+// // 	printf("element 0 is \"%s\"\n", (char*)elt);
+// // 	printf("removing only remaining element: ");
+// // 	LinkedList_remove(list, elt);
+// // 	LinkedList_print_string_list(list);
 
-// 	printf("list isEmpty: %d\n", LinkedList_isEmpty(list));
+// // 	printf("list isEmpty: %d\n", LinkedList_isEmpty(list));
 
-// 	printf("freeing list\n");
-// 	LinkedList_free(list, false);
-// }
+// // 	printf("freeing list\n");
+// // 	LinkedList_free(list, false);
+// // }
 
-#endif
+// #endif

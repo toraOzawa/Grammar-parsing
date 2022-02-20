@@ -2,35 +2,36 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include "tree.h"
 
 // TREE parseTree; /* holds the result of the parse */
 // char *nextTerminal; /* current position in input string */
 
 
-void preorder(pNODE n) {
-    pNODE c; /* a child of node n */
-    printf("%c\n", n->nodeLabel);
-    c = n->leftmostChild;
-    while (c != NULL) {
-        preorder(c);
-        c = c->rightSibling;    
-    }
-}
+// void preorder(pNODE n) {
+//     pNODE c; /* a child of node n */
+//     printf("%c\n", n->nodeLabel);
+//     c = n->leftmostChild;
+//     while (c != NULL) {
+//         preorder(c);
+//         c = c->rightSibling;    
+//     }
+// }
 
-void postorder(pNODE n) {
-    pNODE c; /* a child of node n */
-    c = n->leftmostChild;
-    while (c != NULL) {
-        postorder(c);
-        c = c->rightSibling;
-    }
-    printf("%c\n", n->nodeLabel);
-}
+// void postorder(pNODE n) {
+//     pNODE c; /* a child of node n */
+//     c = n->leftmostChild;
+//     while (c != NULL) {
+//         postorder(c);
+//         c = c->rightSibling;
+//     }
+//     printf("%c\n", n->nodeLabel);
+// }
 
-void main() {
-    nextTerminal = "()()"; /* in practice, a string of terminals would be read from input */
-    parseTree = B();
-}
+// int main() {
+//     nextTerminal = "()()"; /* in practice, a string of terminals would be read from input */
+//     parseTree = B();
+// }
 
 TREE makeNode0(char x) { 
     TREE root;
@@ -63,5 +64,9 @@ void free_Tree() {
 
 void free_Root() {
 
+}
+
+int main() {
+    
 }
 

@@ -1,10 +1,11 @@
+#include <stdlib.h>
 #include "Stack.h"
 
 
 Stack new_Stack() {
     Stack new = (Stack)malloc(sizeof(struct Stack));
     new->stack = new_LinkedList();
-    return newl
+    return new;
 }
 
 void Stack_free(Stack this, bool free_data_also) {
@@ -14,15 +15,15 @@ void Stack_free(Stack this, bool free_data_also) {
 
 
 bool Stack_isEmpty(const Stack this) {
-    LinkedList_isEmpty(this->stack);
+    return LinkedList_isEmpty(this->stack);
 }
 
 void Stack_push(Stack this, void *value) {
-    LinkedList_add_at_front(this, value);
+    LinkedList_add_at_front(this->stack, value);
 }
 
 void *Stack_pop(Stack this) {
-    return LinkedList_pop(this);
+    return LinkedList_pop(this->stack);
 }
 
 void *Stack_peek(Stack this, int i) {

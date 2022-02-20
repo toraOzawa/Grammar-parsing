@@ -30,7 +30,7 @@
 // ⟨NumberTail⟩ → ⟨Number ⟩ | ϵ
 // ⟨Digit⟩ → 0 | 1 | · · · | 9                 (add to tree)
 
-extern Tree expression();
+extern bool expression();
 
 extern bool expr_tail();
 
