@@ -30,6 +30,6 @@ void *Stack_peek(Stack this, int i) {
     return LinkedList_elementAt(this->stack, i);
 }
 
-int main() {
+// int main() {
     
-}
+// }
