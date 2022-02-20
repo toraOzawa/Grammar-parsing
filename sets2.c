@@ -149,7 +149,7 @@ TREE number_tail() { // might cause problems
 }
 
 // <digit> -> 0 | 1 | · · · | 9
-Tree digit() {
+TREE digit() {
     bool isDigit = is_digit();
     if (isDigit) { 
         match(string[i]);
