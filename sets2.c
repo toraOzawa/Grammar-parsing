@@ -18,166 +18,152 @@ struct ParseTable {
     int* row_lengths; // keeps track of row lengths of dictionary
 };
 
-// // <expression> -> <atomic> <expression tail>
-// TREE expression() {
-//     if (!atomic()) return 0;
-//     if (!expr_tail()) return 0;
+// <expression> -> <atomic> <expression tail>
+TREE expression() {
+    TREE atomic = atomic();
+    if (atomic == NULL) return NULL;
+    TREE tail  = expr_tail();
+    if (tail == NULL) return NULL;
 
-//     // parse tree handling 
-//     return 1;
+    return makeNode4('E', atomic, tail, NULL, NULL);
 
-// }
+}
 
-// // <expression tail> -> U <expression> | ^ <expression> | ϵ
-// TREE expr_tail() { // could cause problems
-//     if (lookahead('U')) {
-//         match('U');
-//         TREE exp = expression();
-//         if (exp == NULL) return 0;
-//         return 1;
-//     } else if (lookahead('^')) {
-//         match('^');
-//         TREE exp = expression();
-//         if (exp == NULL) return 0;
-//         return 1;   
-//     } else {
-//         return 1; 
-//     }
-// }
+// <expression tail> -> U <expression> | ^ <expression> | ϵ
+TREE expr_tail() { // could cause problems
+    if (lookahead('U')) {
+        match('U');
+        TREE exp = expression();
+        if (exp == NULL) return NULL;
+        return makeNode4('e', makeNode0('U'), exp, NULL, NULL); 
+    } else if (lookahead('^')) {
+        match('^');
+        TREE exp = expression();
+        if (exp == NULL) return NULL;
+        return makeNode4('e', makeNode0('^'), exp, NULL, NULL);   
+    } else {
+        return makeNode1('e', makeNode0(':')); 
+    }
+}
 
-// // <atomic> -> (<expression>) | <set>
-// TREE atomic() {
-//     if (lookahead('(')) {
-//         if (!match('(')) return 0;
-//         if (!expression()) return 0;
-//         if (!match(')')) return 0;
-//         return 1;
-//     } else {
-//         if (!set()) return 0; 
-//         return 1; // could be condensed to return set()
-//     }
-// }
+// <atomic> -> (<expression>) | <set>
+TREE atomic() {
+    if (lookahead('(')) {
+        if (!match('(')) return NULL;
+        TREE exp = expression();
+        if (exp == NULL) return NULL;
+        if (!match(')')) return NULL;
+        return makeNode4('a', makeNode0('('), exp, makeNode0(')'), NULL);
+    } else {
+        TREE set = set();
+        if (set == NULL) return NULL; 
+        return makeNode1('a', set); 
+    }
+}
 
-// // <set> -> { <set tail>
-// TREE set() {
-//     if (!match('{')) return 0;
-//     if (!set_tail()) return 0;
+// <set> -> { <set tail>
+TREE set() {
+    if (!match('{')) return NULL;
+    TREE tail = set_tail();
+    if (tail == NULL) return NULL;
 
-//     return 1;
-// }
+    return makeNode4('S', makeNode0('{'), tail, NULL, NULL);
+}
 
-// // <set> -> { <set tail>
-// TREE set_tail() {
-//     if (lookahead('}')) {
-//         return match('}');
-//     } else {
-//         if (!elements()) return 0;
-//         if (!match('}')) return 0;
-//         return 1; 
-//     }
-// }
+// ⟨SetTail⟩ → } | ⟨Elements⟩ }
+TREE set_tail() {
+    if (lookahead('}')) {
+        match('}');
+        return makeNode1('s', makeNode0('}'));
+    } else {
+        TREE elem = elements();
+        if (elem == NULL) return NULL;
+        if (!match('}')) return NULL;
+        return makeNode4('s', elem, makeNode0('}'), NULL, NULL); 
+    }
+}
 
-// // <elements> -> <element> <elements tail>
-// TREE elements() {
-//    TREE elem = element();
-//    if (elem == NULL) return NULL;
-//    TREE tail = elements_tail();
-//    if (tail == NULL) return NULL;
+// <elements> -> <element> <elements tail>
+TREE elements() {
+   TREE elem = element();
+   if (elem == NULL) return NULL;
+   TREE tail = elements_tail();
+   if (tail == NULL) return NULL;
 
-//     if (tail->label == ':') { 
-//         // free tail   
-//         return makeNode1('E', elem); 
+   return makeNode4('L', elem, tail, NULL, NULL);
+}
+
+// <elements tail> -> , <elements> | ϵ
+TREE elements_tail() { // causing problems?
+    if (lookahead(',')) {
+        match(','); // could be formalized like the other if statements
+        TREE elems = elements();
+        if (elems == NULL) return NULL; // could be condensed 
+
+        return makeNode4('t', makeNode0(','), elems, NULL, NULL);
+
+    } else {
+        return makeNode1('t', makeNode0(':'));
+    }
+}
+
+// <element> -> <number>
+TREE element() {
+    TREE num = number();
+    if (num == NULL) return NULL;
+    return makeNode1('l', num);
+}
+
+// <number> -> <digit> <number tail>
+TREE number() {
+    TREE dig = digit();
+    if (dig == NULL) return NULL;
+    TREE tail = number_tail();
+    if (tail == NULL) return NULL;
+
     
-//     }
+    return makeNode4('N', dig, tail, NULL, NULL);
+}
 
-//     TREE rightMost = tail->leftmostChild;
-//     TREE middle = makeNode0(',');
-//     TREE leftMost = makeNode1('E', elem);
-//     tail->leftmostChild = leftMost;
-//     leftMost->rightSibling = middle;
-//     middle->rightSibling = rightMost;
-//    return tail->leftmostChild;
-// }
+// <number tail> -> <number> | ϵ
+TREE number_tail() { // might cause problems
+    if (is_digit()) { // lookahead in this scenario
+        return makeNode1('n', number());
+    } else {
+        return makeNode1('n', makeNode0(':'));
+    }
+}
 
-// // <elements tail> -> , <elements> | ϵ
-// TREE elements_tail() { // causing problems?
-//     if (lookahead(',')) {
-//         match(','); // could be formalized like the other if statements
-//         TREE elems = elements();
-//         if (elems == NULL) return NULL; // could be condensed 
+// <digit> -> 0 | 1 | · · · | 9
+TREE digit() {
+    bool isDigit = is_digit();
+    if (isDigit) { 
+        match(string[i]);
+        return makeNode1('D', makeNode0(string[i]));
+    } else {
+        return NULL;
+    }
+}
 
-//         return elems;
+bool is_digit() {
+    return string[i] == '0' || string[i] == '1' || string[i] == '2' || string[i] == '3' || string[i] == '4' || string[i] == '5' || string[i] == '6' || string[i] == '7' || string[i] == '8' || string[i] == '9';
+}
 
-//     } else {
-//         return makeNode0(':');
-//     }
-// }
+bool parse_set_alg(char *input) {
+    string = input;
+    i = 0;
+    length = strlen(string);
+    printf("input length: %d\n", length);
+    // bool result = true;
+    // while(i < length) {
+    //     result = expression 
+    // }
+    return expression() != NULL && length == i; // may cause problems
+}
 
-// // <element> -> <number>
-// TREE element() {
-//     TREE num = number();
-//     if (num == NULL) return NULL;
-//     return makeNode1('e', num);
-// }
-
-// // <number> -> <digit> <number tail>
-// TREE number() {
-//     TREE dig = digit();
-//     if (dig == NULL) return NULL;
-//     TREE tail = number_tail();
-//     if (tail == NULL) return NULL;
-
-
-//     if (tail->label == ':') return makeNode4('N', dig, NULL, NULL, NULL);
-
-//     TREE leftMost = makeNode1('N', dig);
-//     TREE rightMost = tail->leftmostChild;
-
-//     tail -> leftmostChild = leftMost;
-//     leftMost->rightSibling = rightMost;
-    
-//     return tail;
-// }
-
-// // <number tail> -> <number> | ϵ
-// TREE number_tail() { // might cause problems
-//     if (is_digit()) { // lookahead in this scenario
-//         return number();
-//     } else {
-//         return makeNode0(':');
-//     }
-// }
-
-// // <digit> -> 0 | 1 | · · · | 9
-// TREE digit() {
-//     bool isDigit = is_digit();
-//     if (isDigit) { 
-//         match(string[i]);
-//         return makeNode1( 'd', makeNode0(string[i]));
-//     } else {
-//         return NULL;
-//     }
-// }
-
-// bool is_digit() {
-//     return string[i] == '0' || string[i] == '1' || string[i] == '2' || string[i] == '3' || string[i] == '4' || string[i] == '5' || string[i] == '6' || string[i] == '7' || string[i] == '8' || string[i] == '9';
-// }
-
-// bool parse_set_alg(char *input) {
-//     string = input;
-//     i = 0;
-//     length = strlen(string);
-//     printf("input length: %d\n", length);
-//     // bool result = true;
-//     // while(i < length) {
-//     //     result = expression 
-//     // }
-//     return expression() != NULL && length == i; // may cause problems
-// }
-
-// bool lookahead(char c) {
-//     return string[i] == c && i < length;
-// }
+bool lookahead(char c) {
+    return string[i] == c && i < length;
+}
 
 bool match(char c) {
     if (c == ':') return true; // special case used in table driven parser
@@ -528,12 +514,11 @@ int main() {
     set_alg->table[D][(int)'8'] = 24; 
     set_alg->table[D][(int)'9'] = 25; 
    
-    TREE result = table_parse_set_alg(set_alg, "(({123456789,457293959})^{3839})U{3,6,9,10}");
+    TREE result = table_parse_set_alg(set_alg, "{4567}");
     if (result != NULL) {
         printf("Success case reached. Were we supposed to?\n");
-        printf("Before");
-        root;
-        printf("After");
-        TREE_pretty_print(result, 0);
+        printf("Before\n");
+        printf("After\n");
+        TREE_pretty_print(root, 0);
     }
 }

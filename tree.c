@@ -52,8 +52,11 @@ TREE makeNode1(char x, TREE t) {
 TREE makeNode4(char x, TREE t1, TREE t2, TREE t3, TREE t4) {
     TREE root;
     root = makeNode1(x, t1);
+    if (t1 == NULL) return root;
     t1->rightSibling = t2;
+    if (t2 == NULL) return root;
     t2->rightSibling = t3;
+    if (t3 == NULL) return root;
     t3->rightSibling = t4;
     return root;
 }
@@ -67,14 +70,15 @@ void free_Root() {
 }
 
 void TREE_pretty_print(TREE t, int spaces) {
-    printf("call start");
+    // printf("call start\n");
     for (int i = 0; i < spaces; i++) {
         printf(" ");
     }
-    printf("%c", t->label);
+    // printf("spaces inserted\n");
+    printf("%c\n", t->label);
 
     if (t->leftmostChild != NULL) TREE_pretty_print(t->leftmostChild, spaces + 1);
-    if (t->leftmostChild != NULL) TREE_pretty_print(t->rightSibling, spaces);
+    if (t->rightSibling != NULL) TREE_pretty_print(t->rightSibling, spaces);
 
 }
 
