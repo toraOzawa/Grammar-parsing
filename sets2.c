@@ -192,7 +192,7 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
         if (isTerminal(cur->label)) {
             bool result = match(cur->label);
             if (!result) {
-                Stack_free(stack);
+                Stack_free(stack, true);
                 return NULL;
             }
         } else {
@@ -200,7 +200,7 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
             int category = tb->table[(int)cur->label][(int)string[i]];
             printf("Category number: %d, Label: %c, input char: %c\n", category, cur->label, string[i]);
             if (category == -1) { 
-                Stack_free(stack);
+                Stack_free(stack, true);
                 return NULL; 
             }
 
