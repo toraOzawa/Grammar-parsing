@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "LinkedList.h"
 
+// Essentually "wraps" the LinkedList structure 
 struct Stack {
     LinkedList stack;
 };

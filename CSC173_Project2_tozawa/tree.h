@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-// Code Taken from chapter 11 of Foundations of Computer Science, by Al Aho and Jeff Ullman
+
 typedef struct NODE *TREE;
 
 struct NODE {

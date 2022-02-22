@@ -21,5 +21,6 @@ to the stack. Finally, an array of ints is also used to keep track of the size o
 in the assignment is hard coded in the function set_parse_table() (I do apologize that it is done line by line and not by 
 function calls, making it quite long). 
 
-The main function is in the file sets.c as instructed. Users will able to execute a REPL when project is built. 
+The main function is in the file sets.c as instructed. Users will able to execute a REPL when project is built. REPLS were 
+implemented using scanf and so general behavior is defined as such. 
 
