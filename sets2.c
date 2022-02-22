@@ -574,7 +574,7 @@ int main() {
     printf("\n\n");
 
     printf("Table driven parser: \n");
-    printf("Enter an expression to parse (\"done\" to move on): ");
+    printf("Enter an expression to parse (\"done\" to move terminate program): ");
     scanf("%59s", input);
     printf("\n");
     while (strcmp(input,"done") != 0) {
@@ -588,7 +588,7 @@ int main() {
             printf("\n");
             TREE_free(result);
         }
-        printf("Enter next expression (\"next\" to move on):");
+        printf("Enter next expression (\"done\" to terminate program):");
         scanf("%59s", input);
     }
 
