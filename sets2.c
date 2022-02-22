@@ -226,7 +226,7 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
     printf("%d\n", i);
     if (length != i) return NULL;
     return root;
-s
+
 }
 
 bool isTerminal(char c) {
