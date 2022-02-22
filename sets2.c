@@ -25,7 +25,10 @@ TREE expression() {
     TREE atom = atomic();
     if (atom == NULL) return NULL;
     TREE tail  = expr_tail();
-    if (tail == NULL) return NULL;
+    if (tail == NULL)  { 
+        TREE_free(atom);
+        return NULL; 
+    }
 
     return makeNode4('E', atom, tail, NULL, NULL);
 
@@ -54,7 +57,10 @@ TREE atomic() {
         if (!match('(')) return NULL;
         TREE exp = expression();
         if (exp == NULL) return NULL;
-        if (!match(')')) return NULL;
+        if (!match(')')) {
+            TREE_free(exp);
+            return NULL;
+        }
         return makeNode4('a', makeNode0('('), exp, makeNode0(')'), NULL);
     } else {
         TREE s = set();
@@ -80,7 +86,10 @@ TREE set_tail() {
     } else {
         TREE elem = elements();
         if (elem == NULL) return NULL;
-        if (!match('}')) return NULL;
+        if (!match('}'))  { 
+            TREE_free(elem);
+            return NULL; 
+        }
         return makeNode4('s', elem, makeNode0('}'), NULL, NULL); 
     }
 }
@@ -90,7 +99,10 @@ TREE elements() {
    TREE elem = element();
    if (elem == NULL) return NULL;
    TREE tail = elements_tail();
-   if (tail == NULL) return NULL;
+   if (tail == NULL)  { 
+       TREE_free(elem);
+       return NULL; 
+    }
 
    return makeNode4('L', elem, tail, NULL, NULL);
 }
@@ -121,7 +133,10 @@ TREE number() {
     TREE dig = digit();
     if (dig == NULL) return NULL;
     TREE tail = number_tail();
-    if (tail == NULL) return NULL;
+    if (tail == NULL)  { 
+        TREE_free(dig);
+        return NULL; 
+    }
 
     
     return makeNode4('N', dig, tail, NULL, NULL);
@@ -192,7 +207,8 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
         if (isTerminal(cur->label)) {
             bool result = match(cur->label);
             if (!result) {
-                Stack_free(stack, true);
+                Stack_free(stack, false);
+                TREE_free(root);
                 return NULL;
             }
         } else {
@@ -200,7 +216,8 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
             int category = tb->table[(int)cur->label][(int)string[i]];
             printf("Category number: %d, Label: %c, input char: %c\n", category, cur->label, string[i]);
             if (category == -1) { 
-                Stack_free(stack, true);
+                Stack_free(stack, false);
+                TREE_free(root);
                 return NULL; 
             }
 
