@@ -202,7 +202,7 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
 
     root = makeNode0('E');
     Stack_push(stack, root);
-    TREE cur_root = root;
+    TREE cur_root = root; // cur root represents highest syntactic category in stack when in use
 
     // While stack in not empty....
     while (!Stack_isEmpty(stack)) {
@@ -262,6 +262,10 @@ bool isTerminal(char c) {
     return c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9' || c == '^' || c == '{' || c == '}' || c == 'U' || c == ',' || c == ':' || c == '(' || c == ')';
 }
 
+// Creates and returns parse table for Set algebra expressions (must free manually)
+// Table is designed in a way which creating a framework to create grammars would be relatively similar 
+// Thus some excess space (both in lines of code and memory) is used, in return for some speed and flexibility, 
+// although the latter is not needed for this project
 ParseTable set_parse_table() {
     ParseTable set_alg = (ParseTable)malloc(sizeof(struct ParseTable));
     set_alg->table = (int**)malloc(128 * sizeof(int*));
@@ -561,10 +565,7 @@ int main() {
     printf("D = Digit,\n");
     printf(": = epsilon (using \":\" to test for failures may cause undefined behavior)\n\n");
 
-
-    
-   
-   // repl
+   // Recursive descent parser REPL
     printf("Recursive descent parser: \n");
     printf("Enter an expression to parse (\"next\" to move on): ");
     scanf("%59s", input);
@@ -585,6 +586,8 @@ int main() {
     }
     printf("\n\n");
 
+
+    // Table driven parsing REPL
     ParseTable set_alg = set_parse_table();
     printf("Table driven parser: \n");
     printf("Enter an expression to parse (\"done\" to move terminate program): ");
@@ -605,6 +608,7 @@ int main() {
         scanf("%59s", input);
     }
 
+    // Freeing parse table manually
     free(set_alg->row_lengths);
     for (int i = 0; i < 128; i++) {
         free(set_alg->table[i]);
