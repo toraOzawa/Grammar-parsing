@@ -20,7 +20,7 @@ struct ParseTable {
     int* row_lengths; // keeps track of row lengths of dictionary
 };
 
-// <expression> -> <atomic> <expression tail>
+// ⟨Expr⟩ → ⟨Atomic⟩ ⟨ExprTail⟩                   
 TREE expression() {
     TREE atom = atomic();
     if (atom == NULL) return NULL;
@@ -30,8 +30,8 @@ TREE expression() {
     return makeNode4('E', atom, tail, NULL, NULL);
 
 }
-
-// <expression tail> -> U <expression> | ^ <expression> | ϵ
+             
+// ⟨ExprTail⟩ → U ⟨Expr ⟩ | ^ ⟨Expr ⟩ | ϵ    
 TREE expr_tail() { // could cause problems
     if (lookahead('U')) {
         match('U');
@@ -48,7 +48,7 @@ TREE expr_tail() { // could cause problems
     }
 }
 
-// <atomic> -> (<expression>) | <set>
+// ⟨Atomic⟩ → ( ⟨Expr ⟩ ) | ⟨Set⟩
 TREE atomic() {
     if (lookahead('(')) {
         if (!match('(')) return NULL;
@@ -63,7 +63,7 @@ TREE atomic() {
     }
 }
 
-// <set> -> { <set tail>
+// ⟨Set⟩ → { ⟨SetTail⟩                        
 TREE set() {
     if (!match('{')) return NULL;
     TREE tail = set_tail();
@@ -85,7 +85,7 @@ TREE set_tail() {
     }
 }
 
-// <elements> -> <element> <elements tail>
+// 5: ⟨Elements⟩ → ⟨Element⟩ ⟨ElementsTail⟩       
 TREE elements() {
    TREE elem = element();
    if (elem == NULL) return NULL;
@@ -94,8 +94,8 @@ TREE elements() {
 
    return makeNode4('L', elem, tail, NULL, NULL);
 }
-
-// <elements tail> -> , <elements> | ϵ
+     
+// 6: ⟨ElementsTail⟩ → , ⟨Elements⟩ | ϵ  
 TREE elements_tail() { // causing problems?
     if (lookahead(',')) {
         match(','); // could be formalized like the other if statements
@@ -109,14 +109,14 @@ TREE elements_tail() { // causing problems?
     }
 }
 
-// <element> -> <number>
+// ⟨Element⟩ → ⟨Number⟩                      
 TREE element() {
     TREE num = number();
     if (num == NULL) return NULL;
     return makeNode1('l', num);
 }
 
-// <number> -> <digit> <number tail>
+// ⟨Number⟩ → ⟨Digit⟩ ⟨NumberTail⟩           
 TREE number() {
     TREE dig = digit();
     if (dig == NULL) return NULL;
@@ -127,7 +127,7 @@ TREE number() {
     return makeNode4('N', dig, tail, NULL, NULL);
 }
 
-// <number tail> -> <number> | ϵ
+// ⟨NumberTail⟩ → ⟨Number ⟩ | ϵ
 TREE number_tail() { // might cause problems
     if (is_digit()) { // lookahead in this scenario
         return makeNode1('n', number());
@@ -136,7 +136,7 @@ TREE number_tail() { // might cause problems
     }
 }
 
-// <digit> -> 0 | 1 | · · · | 9
+// ⟨Digit⟩ → 0 | 1 | · · · | 9 
 TREE digit() {
     bool isDigit = is_digit();
     if (isDigit) { 
@@ -226,7 +226,7 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
     printf("%d\n", i);
     if (length != i) return NULL;
     return root;
-
+s
 }
 
 bool isTerminal(char c) {
