@@ -191,12 +191,18 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
         TREE cur = Stack_pop(stack);
         if (isTerminal(cur->label)) {
             bool result = match(cur->label);
-            if (!result) return NULL;
+            if (!result) {
+                Stack_free(stack);
+                return NULL;
+            }
         } else {
             cur_root = cur;
             int category = tb->table[(int)cur->label][(int)string[i]];
             printf("Category number: %d, Label: %c, input char: %c\n", category, cur->label, string[i]);
-            if (category == -1) return NULL;
+            if (category == -1) { 
+                Stack_free(stack);
+                return NULL; 
+            }
 
             int children_num = tb->row_lengths[category];
             for (int j = 0; j < children_num; j++) {
