@@ -176,6 +176,7 @@ TREE parse_set_alg(char *input) {
     printf("input length: %d\n", length);
     root = expression();
     if (length != i)  { 
+        if (root == NULL) return NULL;
         TREE_free(root);
         return NULL; 
     }
@@ -250,6 +251,7 @@ TREE table_parse_set_alg(ParseTable tb, char *input) {
     Stack_free(stack, false);
     printf("%d\n", i);
     if (length != i) { 
+        if (root == NULL) return NULL;
         TREE_free(root);
         return NULL; 
     }
